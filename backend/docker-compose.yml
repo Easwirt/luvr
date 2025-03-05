@@ -25,8 +25,10 @@ services:
       - "8000:8000"
     environment:
       - PORT=8000
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}
     depends_on:
       - postgresql
+      - discovery_service
     env_file:
       - .env
 

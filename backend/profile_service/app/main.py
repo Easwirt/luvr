@@ -8,7 +8,7 @@ import py_eureka_client.eureka_client as eureka_client
 
 app = FastAPI()
 
-EUREKA_SERVER = "http://localhost:8761/eureka/"  # Адрес Eureka Server
+EUREKA_SERVER = "http://discovery-service:8761/eureka/"  # Адрес Eureka Server
 SERVICE_NAME = "fastapi-service"
 SERVICE_PORT = 8000
 
