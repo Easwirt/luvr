@@ -1,21 +1,37 @@
 version: '3.9'
 
 services:
-  backend:
-    container_name: luvr_backend
-    build: 
-      context: .
+  discovery_service:
+    container_name: discover_service
+    build:
+      context: discovery-service
       dockerfile: Dockerfile
-    ports: 
-      - "8000:8000"
-    volumes:
-      - ./app:/backend/app/
+    ports:
+      - "8761:8761"
     environment:
-      - PORT=8000
+      - PORT=8761
     depends_on:
       - postgresql
     env_file:
       - .env
+
+
+  profile_service:
+    container_name: profile_service
+    build: 
+      context: profile_service
+      dockerfile: Dockerfile
+    ports: 
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}
+    depends_on:
+      - postgresql
+      - discovery_service
+    env_file:
+      - .env
+
 
   postgresql:
     image: postgres:15
