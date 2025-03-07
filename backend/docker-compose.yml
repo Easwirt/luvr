@@ -9,23 +9,22 @@ services:
     ports:
       - "8761:8761"
     environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE={EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}
       - PORT=8761
     env_file:
       - .env
     networks:
         - tinder
 
-
   user_service:
     container_name: user-service
     build: 
       context: user-service
       dockerfile: Dockerfile
-    ports: 
+    ports:
       - "8000:8000"
     environment:
       - PORT=8000
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}
     depends_on:
       - postgresql
       - discovery_service
@@ -51,10 +50,9 @@ services:
     networks:
         - tinder
 
-
   postgresql:
     image: postgres:15
-    container_name: luvr_postgresql
+    container_name: luvr-postgresql
     restart: unless-stopped
     ports:
       - "${POSTGRES_PORT}:5432"
@@ -67,7 +65,7 @@ services:
     env_file:
       - .env
     networks:
-          - tinder
+      - tinder
 
 volumes:
   pg_data:
