@@ -1,0 +1,77 @@
+version: '3.9'
+
+services:
+  discovery_service:
+    container_name: discovery-service
+    build:
+      context: discovery-service
+      dockerfile: Dockerfile
+    ports:
+      - "8761:8761"
+    environment:
+      - PORT=8761
+    env_file:
+      - .env
+    networks:
+        - tinder
+
+
+  user_service:
+    container_name: user-service
+    build: 
+      context: user-service
+      dockerfile: Dockerfile
+    ports: 
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}
+    depends_on:
+      - postgresql
+      - discovery_service
+    env_file:
+      - .env
+    networks:
+        - tinder
+
+  api-gateway:
+    container_name: api-gateway
+    build:
+      context: api-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+        - PORT=8080
+        - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}
+    depends_on:
+      - discovery_service
+    env_file:
+      - .env
+    networks:
+        - tinder
+
+
+  postgresql:
+    image: postgres:15
+    container_name: luvr_postgresql
+    restart: unless-stopped
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    env_file:
+      - .env
+    networks:
+          - tinder
+
+volumes:
+  pg_data:
+
+networks:
+  tinder:
+    driver: bridge
