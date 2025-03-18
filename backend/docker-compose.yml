@@ -71,8 +71,8 @@ services:
     container_name: keycloak
     image: quay.io/keycloak/keycloak:latest
     environment:
-      KEYCLOAK_USER: ${KEYCLOAK_USER}
-      KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
+      KEYCLOAK_ADMIN: ${KEYCLOAK_USER}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_PASSWORD}
       DB_VENDOR: POSTGRES
       DB_ADDR: ${POSTGRES_HOST}
       DB_DATABASE: ${POSTGRES_DB}
@@ -82,6 +82,10 @@ services:
       - "9078:8080"
     networks:
       - tinder
+    command:
+      - "start-dev"
+    depends_on:
+      - postgresql
 
 volumes:
   pg_data:
