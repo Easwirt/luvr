@@ -49,6 +49,23 @@ services:
     networks:
         - luvr
 
+  authorization-service:
+    container_name: authorization-service
+    build:
+      context: authorization-service
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      - PORT=8081
+    depends_on:
+      - postgresql
+      - discovery_service
+    env_file:
+      - .env
+    networks:
+        - luvr
+
   postgresql:
     image: postgres:15
     container_name: luvr-postgresql

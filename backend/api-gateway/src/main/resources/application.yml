@@ -8,13 +8,10 @@ spring:
           uri: lb://user-service
           predicates:
             - Path=/users/**
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: http://localhost:8080/realms/luvr-app
-          jwk-set-uri: http://localhost:8080/realms/luvr-app/protocol/openid-connect/certs
-
+        - id: authorization-service
+          uri: lb://authorization-service
+          predicates:
+            - Path=/auth/**
 
 server:
   port: 8765
