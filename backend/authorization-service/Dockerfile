@@ -9,9 +9,9 @@ RUN mvn -B -DskipTests clean package
 FROM openjdk:17-jdk-alpine
 WORKDIR /app
 
-COPY --from=build /app/target/api-gateway-0.0.1-SNAPSHOT.jar /app/api-gateway.jar
+COPY --from=build /app/target/authorization-service-0.0.1-SNAPSHOT.jar /app/authorization-service.jar
 
 
-EXPOSE 8765
+EXPOSE 8081
 
-ENTRYPOINT ["java", "-jar", "api-gateway.jar"]
+ENTRYPOINT ["java", "-jar", "authorization-service.jar"]

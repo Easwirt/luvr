@@ -8,18 +8,21 @@ spring:
           uri: lb://user-service
           predicates:
             - Path=/users/**
-
-        - id: user-service-swagger
-          uri: lb://user-service
-          predicates:
-            - Path=/user-service/docs
           filters:
-            - RewritePath=/user-service/docs, /docs
+            - AuthenticationFilter
+
+        - id: authorization-service
+          uri: lb://authorization-service
+          predicates:
+            - Path=/auth/**
 
 server:
-  port: 8080
+  port: 8765
 
 eureka:
   client:
     service-url:
         defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}
+
+jwt:
+   secret: ${JWT_SECRET}
