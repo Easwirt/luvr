@@ -7,6 +7,9 @@ import com.luvr.authorization_service.repository.AuthRepository;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 public class AuthService {
 
@@ -22,17 +25,25 @@ public class AuthService {
         return authRepository.createUser(email, username, password);
     }
 
-    public Mono<String> login(String email) throws UserException {
+    public Mono<?> login(String email) throws UserException {
         UserRequest userRequest = authRepository.login(email).block();
 
+        Map<String,String> tokens=new HashMap<>();
+
         if (userRequest != null) {
-            return Mono.just(jwtService.generateToken(userRequest.username(), "user", "access"));
+            String accessToken=jwtService.generateAccessToken(userRequest.username(), "user");
+            String refreshToken=jwtService.generateRefreshToken(userRequest.username(), "user");
+            tokens.put("accessToken",accessToken);
+            tokens.put("refreshToken",refreshToken);
+            return Mono.just(tokens);
         }
         else {
             return Mono.error(new UserException("User not found"));
         }
 
     }
+
+
 
 
 

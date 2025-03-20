@@ -44,6 +44,7 @@ services:
         - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}
     depends_on:
       - discovery_service
+      - authorization-service
     env_file:
       - .env
     networks:
